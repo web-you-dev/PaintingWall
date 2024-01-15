@@ -6,44 +6,66 @@
     <title>3D Model Viewer</title>
     <!-- Подключаем стили для корректного отображения -->
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+
     <!-- Подключаем скрипт для model-viewer -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    <script src="movableControls.js" defer></script>
 </head>
 <body>
     <!-- Вставляем 3D-модель -->
     
-    <model-viewer id="transform" src="cube.glb" scale="1 0.8 0.01" ar ar-placement="wall" ar-modes=" webxr  quick-look" camera-controls touch-action="pan-y" alt="A 3D model of some wall art"></model-viewer>
-    <div class="controls">
+    <model-viewer id="transform" src="cube.glb" exposure="1" scale="1 0.8 0.01" ar ar-placement="wall" ar-modes=" webxr  quick-look" camera-orbit="-30deg auto auto" camera-controls touch-action="pan-y" alt="A 3D model of some wall art">
+     
+
+
+
+    </model-viewer>
+    <div class="controls" id="movableControls">
       <div>
-          Scale: X: <input id="x" value="1" size="3" class="number">,
-          Y: <input id="y" value="0.8" size="3" class="number">,
-         
+      
+        Size: <input id="x" value="1" size="3" class="number">
+         <input id="y" value="0.8" size="3" class="number">
         </div>
+        <div>
+      
+          Shadows: <input id="shadows" value="1" size="3" class="number">
+          Exposure: <input id="exp" value="0" size="3" class="number">
+          </div>
        
         <select id="diffuse">
-          <option>None</option>
-          <option value="t (1).jpg">Person</option>
           <option value="t (2).jpg">Dream</option>
+          <option value="t (1).jpg">Person</option>   
           <option value="t (3).jpg">City</option>
         </select>
-        <p>Custom texture name</p>
-    <p id="texture-name">None</p>
-    <p>Image name from file name</p>
-    <p id="image-name">None</p>
   </div>
     <script>
-        const modelViewerTransform = document.querySelector("model-viewer#transform");
+        const modelViewer  = document.querySelector("model-viewer#transform");
     
         const x = document.querySelector('#x');
         const y = document.querySelector('#y');
-   
-      
-    
+        const shadows = document.querySelector('#shadows');
+        const exposure = document.querySelector('#exp');
+
         const updateScale = () => {
-          modelViewerTransform.scale = `${x.value} ${y.value} 0.01}`;
+          modelViewer.scale = `${x.value} ${y.value} 0.01}`;
         };
         
+        shadows.addEventListener('input', ()=>{
+          if((shadows.value) == "")return;
+          modelViewer.shadowIntensity = shadows.value;
+        });
+
+        exposure.addEventListener('change', () => {
+    if (exposure.value === "") return;
+    const parsedExposure = parseFloat(exposure.value);
+    if (!isNaN(parsedExposure)) {
+      modelViewer.exposure = parsedExposure;
     
+        console.log(modelViewer.exposure);
+    }
+});
+
         x.addEventListener('input', () => {
           updateScale();
         });
@@ -76,6 +98,8 @@
     });
 
     </script>
+
+
 </body>
 
 </html>
